@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Estado Liberal (1833-1874)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-4">Estado Liberal (1833-1874)</h1>
+        <div id="quiz-container">
+            <!-- Aquí se mostrará la pregunta -->
+        </div>
+        <div id="feedback" class="text-center mt-4 text-lg font-medium"></div>
+        <div id="score" class="text-center mt-4">
+            <p>Aciertos: <span id="correct-count">0</span></p>
+            <p>Fallos: <span id="incorrect-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Depósito de preguntas y respuestas
+        const allQuestions = [
+            { question: "¿Quién asumió la regencia tras la muerte de Fernando VII?", options: ["Espartero", "María Cristina", "Carlos María Isidro", "Isabel II"], answer: 1 },
+            { question: "¿Qué Constitución progresista estableció la soberanía nacional y la división de poderes?", options: ["Constitución de 1812", "Constitución de 1837", "Estatuto Real de 1834", "Constitución de 1845"], answer: 1 },
+            { question: "¿Qué tratado puso fin a la primera guerra carlista?", options: ["Tratado de Utrecht", "Convenio de Vergara", "Tratado de París", "Paz de Basilea"], answer: 1 },
+            { question: "¿Quién lideró el pronunciamiento que inició el bienio progresista en 1854?", options: ["Narváez", "Espartero", "O'Donnell", "Prim"], answer: 2 },
+            { question: "¿Qué lema sintetizaba los principios del carlismo?", options: ["Dios, Patria, Fueros y Rey", "Libertad, Igualdad, Fraternidad", "Unidad, Fe y Orden", "Monarquía y Tradición"], answer: 0 },
+{ question: "¿Qué regente promulgó el Estatuto Real de 1834?", options: ["Espartero", "María Cristina", "Isabel II", "Narváez"], answer: 1 },
+{ question: "¿Qué medida llevó a cabo Mendizábal durante su gobierno?", options: ["Reforma del sistema monetario", "Desamortización de bienes eclesiásticos", "Creación de la Guardia Civil", "Abolición de los fueros vascos"], answer: 1 },
+{ question: "¿Qué Constitución restableció la soberanía nacional durante la Regencia de María Cristina?", options: ["Constitución de 1812", "Constitución de 1837", "Constitución de 1845", "Constitución de 1869"], answer: 1 },
+{ question: "¿Qué tratado permitió el fin de la primera guerra carlista?", options: ["Convenio de Vergara", "Tratado de Fontainebleau", "Paz de Basilea", "Tratado de París"], answer: 0 },
+{ question: "¿Qué general fue clave en la victoria isabelina durante la primera guerra carlista?", options: ["Narváez", "Espartero", "O'Donnell", "Zumalacárregui"], answer: 1 },
+{ question: "¿Qué conflicto se produjo tras el rechazo a casar a Isabel II con Carlos VI?", options: ["Segunda guerra carlista", "Primera guerra carlista", "Revolución Gloriosa", "Guerra de los Diez Años"], answer: 0 },
+{ question: "¿Qué partido político fundó O'Donnell?", options: ["Unión Liberal", "Partido Moderado", "Partido Progresista", "Partido Demócrata"], answer: 0 },
+{ question: "¿Qué Constitución estableció el sufragio universal masculino?", options: ["Constitución de 1837", "Constitución de 1845", "Constitución de 1869", "Constitución de 1876"], answer: 2 },
+{ question: "¿Qué evento marcó el inicio del Sexenio Revolucionario?", options: ["La Vicalvarada", "La Revolución Gloriosa", "El pronunciamiento de Riego", "El Pacto de Ostende"], answer: 1 },
+{ question: "¿Quién lideró la Revolución Gloriosa de 1868?", options: ["Prim y Serrano", "Narváez y Espartero", "O'Donnell y Mendizábal", "Maroto y Espartero"], answer: 0 },
+{ question: "¿Qué rey fue elegido tras la Revolución Gloriosa?", options: ["Amadeo I", "Carlos VII", "Alfonso XII", "Fernando VII"], answer: 0 },
+{ question: "¿Qué guerra coincidió con el reinado de Amadeo I?", options: ["Primera guerra carlista", "Segunda guerra carlista", "Tercera guerra carlista", "Guerra de los Diez Años"], answer: 2 },
+{ question: "¿Qué movimiento social surgió con fuerza durante el Sexenio Revolucionario?", options: ["Movimiento obrero", "Movimiento cantonalista", "Movimiento federalista", "Movimiento carlista"], answer: 1 },
+{ question: "¿Qué Constitución fue considerada la más progresista del siglo XIX en España?", options: ["Constitución de 1837", "Constitución de 1845", "Constitución de 1869", "Constitución de 1876"], answer: 2 },
+{ question: "¿Quién proclamó la Primera República Española?", options: ["Amadeo I", "Cortes Generales", "Prim", "Serrano"], answer: 1 },
+{ question: "¿Qué presidente propuso una Constitución republicana y federal?", options: ["Pi y Margall", "Castelar", "Figueras", "Salmerón"], answer: 0 },
+{ question: "¿Qué evento marcó el final del Sexenio Revolucionario?", options: ["Proclamación de Alfonso XII", "Golpe de Estado de Pavía", "Tercera guerra carlista", "Pacto de Ostende"], answer: 1 },
+{ question: "¿Qué institución fue clave en el gobierno autoritario de Serrano?", options: ["El Ejército", "La Iglesia", "La Milicia Nacional", "Las Cortes"], answer: 0 },
+{ question: "¿Qué reforma importante realizó Bravo Murillo durante la década moderada?", options: ["Creación de la Guardia Civil", "Unificación monetaria", "Abolición de los fueros", "Ley de Ferrocarriles"], answer: 0 },
+{ question: "¿Qué ideología defendía la soberanía nacional y la monarquía limitada?", options: ["Moderados", "Progresistas", "Unionistas", "Demócratas"], answer: 1 },
+{ question: "¿Qué acuerdo político buscó destronar a Isabel II?", options: ["Pacto de Ostende", "Convenio de Vergara", "Manifiesto de Manzanares", "Estatuto Real"], answer: 0 },
+{ question: "¿Qué general lideró el bombardeo de Barcelona en 1842?", options: ["Espartero", "Narváez", "O'Donnell", "Prim"], answer: 0 },
+{ question: "¿Qué partido político surgió como escisión de los progresistas?", options: ["Partido Demócrata", "Partido Moderado", "Unión Liberal", "Partido Republicano"], answer: 0 },
+{ question: "¿Qué ley permitió la desamortización de bienes civiles en 1855?", options: ["Ley de Ferrocarriles", "Ley de Sociedades Bancarias", "Ley de Madoz", "Ley de Mendizábal"], answer: 2 },
+{ question: "¿Qué conflicto comenzó tras la caída de Isabel II?", options: ["Tercera guerra carlista", "Revolución Gloriosa", "Segunda guerra carlista", "Guerra de los Diez Años"], answer: 0 },
+{ question: "¿Qué Constitución fue promulgada tras la Revolución Gloriosa?", options: ["Constitución de 1837", "Constitución de 1845", "Constitución de 1869", "Constitución de 1876"], answer: 2 },
+{ question: "¿Qué político preparó la Restauración borbónica?", options: ["Cánovas del Castillo", "Serrano", "Prim", "Pi y Margall"], answer: 0 },
+{ question: "¿Qué presidente dimitió tras negarse a firmar sentencias de muerte?", options: ["Figueras", "Pi y Margall", "Salmerón", "Castelar"], answer: 2 },
+{ question: "¿Qué líder republicano buscó implementar un Estado federal?", options: ["Salmerón", "Castelar", "Pi y Margall", "Figueras"], answer: 2 },
+{ question: "¿Qué conflicto internacional marcó el gobierno de O'Donnell?", options: ["Expedición a Marruecos", "Guerra de los Diez Años", "Tercera guerra carlista", "Revolución Gloriosa"], answer: 0 },
+{ question: "¿Qué sector social apoyaba mayoritariamente a los carlistas?", options: ["Clases altas urbanas", "Clero y campesinos", "Militares y burgueses", "Progresistas"], answer: 1 },
+{ question: "¿Qué general firmó el Convenio de Vergara?", options: ["Maroto", "Espartero", "Narváez", "Zumalacárregui"], answer: 1 },
+{ question: "¿Qué medida económica buscó modernizar España durante el bienio progresista?", options: ["Ley de Ferrocarriles", "Ley de Mendizábal", "Concordato con la Santa Sede", "Código Penal"], answer: 0 },
+{ question: "¿Qué sistema electoral limitó el sufragio al 1% de la población?", options: ["Ley Electoral de 1846", "Constitución de 1837", "Estatuto Real", "Constitución de 1845"], answer: 0 },
+
+            // Más preguntas aquí...
+        ];
+
+        // Función para obtener 20 preguntas aleatorias
+        function getRandomQuestions() {
+            const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 20);
+        }
+
+        // Desordenar las opciones de respuesta
+        function shuffleOptions(options) {
+            return options.map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+        }
+
+        const questions = getRandomQuestions();
+        let currentQuestionIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        const quizContainer = document.getElementById("quiz-container");
+        const feedbackContainer = document.getElementById("feedback");
+        const correctCountSpan = document.getElementById("correct-count");
+        const incorrectCountSpan = document.getElementById("incorrect-count");
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            const shuffledOptions = shuffleOptions([...questionData.options]);
+            feedbackContainer.textContent = ""; // Limpiar feedback anterior
+            quizContainer.innerHTML = `
+                <p class="text-lg font-medium mb-4">${questionData.question}</p>
+                <div class="space-y-2">
+                    ${shuffledOptions.map((option, index) => `
+                        <button 
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none" 
+                            onclick="checkAnswer('${option}')">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedOption) {
+            const questionData = questions[currentQuestionIndex];
+            if (selectedOption === questionData.options[questionData.answer]) {
+                feedbackContainer.textContent = "¡Correcto!";
+                feedbackContainer.classList.add("text-green-500");
+                feedbackContainer.classList.remove("text-red-500");
+                correctCount++;
+            } else {
+                feedbackContainer.textContent = `Incorrecto. La respuesta correcta era: ${questionData.options[questionData.answer]}`;
+                feedbackContainer.classList.add("text-red-500");
+                feedbackContainer.classList.remove("text-green-500");
+                incorrectCount++;
+            }
+
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(loadQuestion, 1000); // Esperar un segundo antes de cargar la siguiente pregunta
+            } else {
+                quizContainer.innerHTML = `
+                    <p class="text-lg font-medium">Has completado el quiz.</p>
+                    <p class="mt-2">Aciertos: ${correctCount}</p>
+                    <p>Fallos: ${incorrectCount}</p>
+                    <button class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none" onclick="restartQuiz()">Reiniciar</button>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+            feedbackContainer.textContent = "";
+            loadQuestion();
+        }
+
+        // Cargar las preguntas aleatorias
+        loadQuestion();
+    </script>
+</body>
+</html>
