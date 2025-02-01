@@ -1,1 +1,151 @@
-Test-Tema7/index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformaciones económicas y sociales del siglo XIX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-4">Transformaciones económicas y sociales del siglo XIX</h1>
+        <div id="quiz-container">
+            <!-- Aquí se mostrará la pregunta -->
+        </div>
+        <div id="feedback" class="text-center mt-4 text-lg font-medium"></div>
+        <div id="score" class="text-center mt-4">
+            <p>Aciertos: <span id="correct-count">0</span></p>
+            <p>Fallos: <span id="incorrect-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Depósito de preguntas y respuestas
+        const allQuestions = [
+           { question: "¿Cuánto creció la población española entre 1797 y 1900?", options: ["Se duplicó", "Aumentó un 77%", "Se cuadruplicó", "Se mantuvo estable"], answer: 1 },
+    { question: "¿Qué tasa de natalidad tenía España en el siglo XIX?", options: ["34‰", "29‰", "43‰", "50‰"], answer: 0 },
+    { question: "¿Cuál fue la esperanza de vida en España en el siglo XIX?", options: ["25 años", "30 años", "35 años", "43 años"], answer: 2 },
+    { question: "¿Qué región española tuvo un crecimiento demográfico excepcional?", options: ["Andalucía", "Galicia", "Cataluña", "Extremadura"], answer: 2 },
+    { question: "¿Cuál fue una causa de las crisis de subsistencia en España?", options: ["Guerras civiles", "Sequías y heladas", "Pérdida de las colonias", "Reformas agrarias"], answer: 1 },
+    { question: "¿Qué enfermedad NO fue una de las endémicas en España durante el siglo XIX?", options: ["Tuberculosis", "Sarampión", "Gripe española", "Difteria"], answer: 2 },
+    { question: "¿Qué factor ayudó a reducir la mortalidad en España a finales del siglo XIX?", options: ["Industrialización", "Abolición de la monarquía", "Avances en medicina preventiva", "Explotación minera"], answer: 2 },
+    { question: "¿Hacia qué dirección se produjo la mayor migración interna en España en el siglo XIX?", options: ["De norte a sur", "De sur a norte", "De la meseta al Levante", "De Galicia a Andalucía"], answer: 2 },
+    { question: "¿Qué ciudades fueron los principales destinos del éxodo rural?", options: ["Valencia y Sevilla", "Madrid y Barcelona", "Toledo y Zaragoza", "Salamanca y Cádiz"], answer: 1 },
+    { question: "¿A qué países americanos emigraron muchos españoles entre 1880 y 1914?", options: ["México y Brasil", "Argentina, Cuba y Venezuela", "Estados Unidos y Canadá", "Colombia y Perú"], answer: 1 },
+    { question: "¿Cuál era la situación de las ciudades españolas en 1900?", options: ["Madrid y Barcelona tenían más de un millón de habitantes", "Casi el 90% de la población vivía en localidades de menos de 100.000 habitantes", "La mayoría de la población era urbana", "Había más de diez ciudades con más de medio millón de habitantes"], answer: 1 },
+    { question: "¿Qué urbanista diseñó el ensanche de Barcelona?", options: ["Carlos María de Castro", "Ildefonso Cerdá", "Arturo Soria", "Antonio Gaudí"], answer: 1 },
+    { question: "¿Qué característica tenía la sociedad de clases respecto a la sociedad estamental?", options: ["Se basaba en la nobleza y el clero", "Era estática y cerrada", "Permitía movilidad social según la riqueza", "Mantenía privilegios jurídicos"], answer: 2 },
+    { question: "¿Qué grupo social perdió sus privilegios pero siguió teniendo influencia política?", options: ["La burguesía", "Los obreros", "La nobleza", "Los artesanos"], answer: 2 },
+    { question: "¿Qué porcentaje de la población representaba la clase media en el siglo XIX?", options: ["5%", "10%", "20%", "30%"], answer: 0 },
+    { question: "¿Qué grupo social era el mayoritario en España durante el siglo XIX?", options: ["Los campesinos", "Los industriales", "Los comerciantes", "Los funcionarios"], answer: 0 },
+    { question: "¿Qué diferencia había entre los jornaleros y los minifundistas?", options: ["Los jornaleros eran asalariados y los minifundistas tenían pequeñas tierras", "Los minifundistas eran ricos y los jornaleros pobres", "Los jornaleros eran industriales y los minifundistas campesinos", "No había diferencia entre ambos"], answer: 0 },
+    { question: "¿Qué corriente obrera abogaba por la destrucción de las máquinas?", options: ["Marxismo", "Anarquismo", "Ludismo", "Socialismo"], answer: 2 },
+    { question: "¿Quién fundó el Partido Socialista Obrero Español en 1879?", options: ["Pablo Iglesias", "Karl Marx", "Giuseppe Fanelli", "Paul Lafargue"], answer: 0 },
+    { question: "¿Qué idea política introdujo Giuseppe Fanelli en España?", options: ["Socialismo", "Comunismo", "Anarquismo", "Liberalismo"], answer: 2 },
+    { question: "¿Qué se propusieron transformar los gobiernos liberales durante el reinado de Isabel II?", options: ["La estructura económica de España", "La estructura política de España", "La estructura religiosa de España", "La estructura educativa de España"], answer: 0 },
+{ question: "¿Cuál era la principal base de la economía española en el siglo XIX?", options: ["Industria", "Agricultura", "Comercio", "Minería"], answer: 1 },
+{ question: "¿Qué tipo de agricultura predominaba en España en el siglo XIX?", options: ["Agricultura intensiva", "Agricultura latifundista de bajo rendimiento", "Agricultura industrial", "Agricultura sostenible"], answer: 1 },
+{ question: "¿Qué clase social poseía grandes latifundios en España durante el siglo XIX?", options: ["Campesinos", "Burguesía", "Nobleza y clero", "Industrias"], answer: 2 },
+{ question: "¿Qué reforma agraria se llevó a cabo en las Cortes de Cádiz?", options: ["Abolición del régimen señorial y los mayorazgos", "Creación de nuevas tierras de cultivo", "Desarrollo de la agricultura intensiva", "Mejora de la productividad agraria"], answer: 0 },
+{ question: "¿En qué año se realizó la desamortización de Mendizábal?", options: ["1836", "1798", "1855", "1900"], answer: 0 },
+{ question: "¿A quién afectaba principalmente la desamortización de Mendizábal?", options: ["A los campesinos", "A los propietarios de tierras rurales", "A los bienes de la Iglesia", "A los industriales"], answer: 2 },
+{ question: "¿Qué impacto tuvo la desamortización de Mendizábal?", options: ["Redistribución de tierras a campesinos", "Concentración de tierras en manos de la oligarquía", "Mayor igualdad en el campo", "Aumento de la producción agrícola"], answer: 1 },
+{ question: "¿Qué tipo de tierras afectaba la desamortización de Madoz?", options: ["Tierras de la nobleza", "Tierras de los ayuntamientos y bienes baldíos", "Tierras de los campesinos", "Tierras de los comerciantes"], answer: 1 },
+{ question: "¿Qué sector industrial fue el más dinámico a principios del siglo XIX?", options: ["Siderurgia", "Textil", "Alimentario", "Minería"], answer: 1 },
+{ question: "¿Dónde se introdujo la máquina de vapor en la industria textil?", options: ["En Galicia", "En Cataluña", "En Andalucía", "En Castilla"], answer: 1 },
+{ question: "¿Qué ley permitió atraer capital extranjero a la minería española?", options: ["Ley de Minas de 1868", "Ley de Bancos de Emisión", "Ley de Ferrocarriles de 1855", "Ley de Desamortización de 1855"], answer: 0 },
+{ question: "¿Qué limitaba el desarrollo de la revolución industrial en España?", options: ["La falta de mano de obra calificada", "La abundancia de recursos naturales", "El apoyo de la burguesía", "La abundancia de capital para la industria"], answer: 0 },
+{ question: "¿Qué recursos faltaban en España para el desarrollo de la industria siderúrgica?", options: ["Hierro", "Carbón de calidad", "Madera", "Agua"], answer: 1 },
+{ question: "¿Qué facilitó la creación de la red ferroviaria en España?", options: ["La Ley de Ferrocarriles de 1855", "La industria textil catalana", "El comercio con Francia", "El apoyo popular"], answer: 0 },
+{ question: "¿Qué limitaba el transporte terrestre interior en España a principios del siglo XIX?", options: ["La falta de recursos económicos", "Los sistemas montañosos", "La falta de trenes", "La ausencia de carreteras"], answer: 1 },
+{ question: "¿Qué tipo de barcos transformó el transporte marítimo en España?", options: ["Veleros rápidos y barcos de vapor", "Veleros antiguos", "Barcos de remos", "Barcos de madera"], answer: 0 },
+{ question: "¿A qué países se centraba el comercio exterior de España tras la pérdida de las colonias?", options: ["Estados Unidos y México", "Francia y Gran Bretaña", "Italia y Portugal", "Alemania y Rusia"], answer: 1 },
+{ question: "¿Qué sistema monetario se estableció en 1868 en España?", options: ["El euro", "El real", "La peseta", "El escudo"], answer: 2 },
+{ question: "¿Qué institución se creó en 1856 para unificar el sistema bancario en España?", options: ["El Banco de San Carlos", "El Banco de España", "El Banco de Bilbao", "El Banco de Santander"], answer: 1 }
+            // Agrega más preguntas aquí hasta completar las 40
+        ];
+
+        // Función para obtener 20 preguntas aleatorias sin modificar el array original
+        function getRandomQuestions() {
+            let shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 20);
+        }
+
+        // Desordenar las opciones de respuesta
+        function shuffleOptions(options) {
+            return [...options].sort(() => Math.random() - 0.5);
+        }
+
+        let questions = getRandomQuestions();
+        let currentQuestionIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        const quizContainer = document.getElementById("quiz-container");
+        const feedbackContainer = document.getElementById("feedback");
+        const correctCountSpan = document.getElementById("correct-count");
+        const incorrectCountSpan = document.getElementById("incorrect-count");
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            const shuffledOptions = shuffleOptions([...questionData.options]);
+            feedbackContainer.textContent = ""; // Limpiar feedback anterior
+            quizContainer.innerHTML = `
+                <p class="text-lg font-medium mb-4">${questionData.question}</p>
+                <div class="space-y-2">
+                    ${shuffledOptions.map((option) => `
+                        <button 
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none" 
+                            onclick="checkAnswer('${option}', '${questionData.options[questionData.answer]}')">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedOption, correctAnswer) {
+            if (selectedOption === correctAnswer) {
+                feedbackContainer.textContent = "¡Correcto!";
+                feedbackContainer.classList.add("text-green-500");
+                feedbackContainer.classList.remove("text-red-500");
+                correctCount++;
+            } else {
+                feedbackContainer.textContent = `Incorrecto. La respuesta correcta era: ${correctAnswer}`;
+                feedbackContainer.classList.add("text-red-500");
+                feedbackContainer.classList.remove("text-green-500");
+                incorrectCount++;
+            }
+
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(loadQuestion, 1000); // Esperar un segundo antes de cargar la siguiente pregunta
+            } else {
+                quizContainer.innerHTML = `
+                    <p class="text-lg font-medium">Has completado el quiz.</p>
+                    <p class="mt-2">Aciertos: ${correctCount}</p>
+                    <p>Fallos: ${incorrectCount}</p>
+                    <button class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none" onclick="restartQuiz()">Reiniciar</button>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+            feedbackContainer.textContent = "";
+            questions = getRandomQuestions();
+            loadQuestion();
+        }
+
+        // Cargar las preguntas aleatorias
+        loadQuestion();
+    </script>
+</body>
+</html>
