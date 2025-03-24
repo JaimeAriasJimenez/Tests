@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: La Segunda República (1931-1936)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-4">La Segunda República (1931-1936)</h1>
+        <div id="quiz-container">
+            <!-- Aquí se mostrará la pregunta -->
+        </div>
+        <div id="feedback" class="text-center mt-4 text-lg font-medium"></div>
+        <div id="score" class="text-center mt-4">
+            <p>Aciertos: <span id="correct-count">0</span></p>
+            <p>Fallos: <span id="incorrect-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Depósito de preguntas y respuestas
+        const allQuestions = [
+    { question: "¿En qué fecha se proclamó la Segunda República en España?", options: ["12 de abril de 1931", "14 de abril de 1931", "28 de junio de 1931", "6 de diciembre de 1931"], answer: 1 },
+    { question: "¿Qué rey abandonó España tras las elecciones municipales de 1931?", options: ["Alfonso XII", "Fernando VII", "Carlos IV", "Alfonso XIII"], answer: 3 },
+    { question: "¿Qué líder presidió el Gobierno provisional tras la proclamación de la República?", options: ["Alejandro Lerroux", "Manuel Azaña", "Niceto Alcalá-Zamora", "Francisco Largo Caballero"], answer: 2 },
+    { question: "¿Qué partido fue el más votado en las elecciones a Cortes Constituyentes de 1931?", options: ["CEDA", "PSOE", "Partido Radical", "Esquerra Republicana"], answer: 1 },
+    { question: "¿Qué aspecto diferenciador tuvo la Constitución de 1931?", options: ["Reconocimiento del voto femenino", "Creación de un Senado", "Restauración de la monarquía", "Centralización del poder"], answer: 0 },
+    { question: "¿Qué diputada defendió activamente el sufragio femenino en 1931?", options: ["Margarita Nelken", "Victoria Kent", "Clara Campoamor", "Dolores Ibárruri"], answer: 2 },
+    { question: "¿Cuál de estos principios NO estaba en la Constitución de 1931?", options: ["Soberanía popular", "Separación Iglesia-Estado", "Sufragio censitario", "Derecho a la propiedad privada"], answer: 2 },
+    { question: "¿Qué órgano era el más importante en la Constitución de 1931?", options: ["Presidencia de la República", "Cortes unicamerales", "Consejo de Ministros", "Tribunal Supremo"], answer: 1 },
+    { question: "¿Quién fue elegido presidente de la República en 1931?", options: ["Francisco Largo Caballero", "Alejandro Lerroux", "Niceto Alcalá-Zamora", "Manuel Azaña"], answer: 2 },
+    { question: "¿Qué reforma buscaba reducir el número de oficiales en el Ejército?", options: ["Reforma agraria", "Reforma educativa", "Reforma militar", "Reforma laboral"], answer: 2 },
+    { question: "¿Qué institución se restauró en Cataluña en 1931?", options: ["Diputación del General", "Generalitat", "Parlamento de Barcelona", "Consejo Catalán"], answer: 1 },
+    { question: "¿Qué ley impulsó la reforma agraria en 1932?", options: ["Ley de Expropiación", "Ley de Reforma Agraria", "Ley de Términos Municipales", "Ley de Segregación de Tierras"], answer: 1 },
+    { question: "¿Qué evento fue clave en la caída del Gobierno de Azaña en 1933?", options: ["Sublevación de Jaca", "Revueltas anarquistas", "Sucesos de Casas Viejas", "Golpe de Estado de Sanjurjo"], answer: 2 },
+    { question: "¿Qué partido lideró la oposición de derecha a la República?", options: ["PSOE", "CEDA", "Partido Radical", "Esquerra Republicana"], answer: 1 },
+    { question: "¿Qué grupo político organizó el golpe de Estado fallido de agosto de 1932?", options: ["Anarquistas", "Militares monárquicos", "Comunistas", "Republicanos federalistas"], answer: 1 },
+    { question: "¿Quién fue el líder de la CEDA?", options: ["José Antonio Primo de Rivera", "Francisco Franco", "Ramiro Ledesma Ramos", "José María Gil Robles"], answer: 3 },
+    { question: "¿Qué partido representaba la extrema derecha inspirada en el fascismo?", options: ["CEDA", "Partido Radical", "Falange Española", "PSOE"], answer: 2 },
+    { question: "¿Qué suceso marcó la Revolución de octubre de 1934?", options: ["Proclamación del Estado Catalán", "Guerra Civil", "Creación del Frente Popular", "Golpe de Sanjurjo"], answer: 0 },
+    { question: "¿Qué ciudad fue epicentro de la insurrección obrera en 1934?", options: ["Madrid", "Sevilla", "Asturias", "Bilbao"], answer: 2 },
+    { question: "¿Qué general dirigió la represión de la Revolución de octubre de 1934?", options: ["Emilio Mola", "Francisco Franco", "Manuel Goded", "José Sanjurjo"], answer: 1 },
+    { question: "¿Quién ganó las elecciones de 1933?", options: ["Frente Popular", "PSOE", "CEDA y Partido Radical", "Partido Comunista"], answer: 2 },
+    { question: "¿Qué personaje asumió el Ministerio de Guerra en 1935?", options: ["Francisco Franco", "Gil Robles", "Manuel Azaña", "Alejandro Lerroux"], answer: 1 },
+    { question: "¿Qué hecho provocó el fin del bienio radical-cedista?", options: ["Escándalos de corrupción", "Reforma educativa", "Sublevación de Jaca", "Creación del Frente Popular"], answer: 0 },
+    { question: "¿Qué bloque político ganó las elecciones de febrero de 1936?", options: ["Bloque Nacional", "Frente Popular", "CEDA", "Partido Radical"], answer: 1 },
+    { question: "¿Qué pasó tras la victoria del Frente Popular en 1936?", options: ["Fin de la República", "Se destituyó a Alcalá-Zamora", "El PSOE asumió el Gobierno", "Se convocó un referéndum"], answer: 1 },
+    { question: "¿Quién fue elegido presidente de la República en mayo de 1936?", options: ["Alejandro Lerroux", "Francisco Largo Caballero", "Manuel Azaña", "José Calvo Sotelo"], answer: 2 },
+    { question: "¿Qué sector social se radicalizó tras las elecciones de 1936?", options: ["Iglesia", "Ejército", "Sindicalistas y obreros", "Burguesía"], answer: 2 },
+    { question: "¿Qué general dirigió la conspiración militar contra la República?", options: ["Francisco Franco", "Emilio Mola", "José Sanjurjo", "Miguel Cabanellas"], answer: 1 },
+    { question: "¿Qué líder político de la derecha fue asesinado en julio de 1936?", options: ["Gil Robles", "José Antonio Primo de Rivera", "José Calvo Sotelo", "Alejandro Lerroux"], answer: 2 },
+    { question: "¿Dónde comenzó la sublevación militar del 17 de julio de 1936?", options: ["Madrid", "Barcelona", "Sevilla", "Melilla"], answer: 3 },
+    { question: "¿Cuál fue el resultado inmediato del golpe de Estado de 1936?", options: ["El triunfo de los sublevados", "La guerra civil", "Una dictadura militar", "El exilio de Azaña"], answer: 1 },
+    { question: "¿Qué partido NO formó parte del Frente Popular?", options: ["PSOE", "Izquierda Republicana", "CEDA", "Partido Comunista"], answer: 2 },
+    { question: "¿Qué organismo elaboró la Constitución de 1931?", options: ["Cortes Generales", "Parlamento de Cataluña", "Asamblea Nacional", "Congreso de los Diputados"], answer: 0 },
+    { question: "¿Qué sindicato lideró las huelgas de 1933?", options: ["UGT", "CNT", "CGT", "PCE"], answer: 1 },
+    { question: "¿Qué medida NO formaba parte de la reforma educativa?", options: ["Escuelas laicas", "Enseñanza obligatoria", "Privilegios para colegios religiosos", "Misiones Pedagógicas"], answer: 2 },
+    { question: "¿Qué grupo político rechazó la Constitución de 1931?", options: ["Republicanos", "Socialistas", "Anarquistas", "Iglesia y sectores conservadores"], answer: 3 }
+]
+
+
+        // Función para obtener 20 preguntas aleatorias
+        function getRandomQuestions() {
+            const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 20);
+        }
+
+        // Desordenar las opciones de respuesta
+        function shuffleOptions(options) {
+            return options.map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+        }
+
+        const questions = getRandomQuestions();
+        let currentQuestionIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        const quizContainer = document.getElementById("quiz-container");
+        const feedbackContainer = document.getElementById("feedback");
+        const correctCountSpan = document.getElementById("correct-count");
+        const incorrectCountSpan = document.getElementById("incorrect-count");
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            const shuffledOptions = shuffleOptions([...questionData.options]);
+            feedbackContainer.textContent = ""; // Limpiar feedback anterior
+            quizContainer.innerHTML = `
+                <p class="text-lg font-medium mb-4">${questionData.question}</p>
+                <div class="space-y-2">
+                    ${shuffledOptions.map((option, index) => `
+                        <button 
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none" 
+                            onclick="checkAnswer('${option}')">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedOption) {
+            const questionData = questions[currentQuestionIndex];
+            if (selectedOption === questionData.options[questionData.answer]) {
+                feedbackContainer.textContent = "¡Correcto!";
+                feedbackContainer.classList.add("text-green-500");
+                feedbackContainer.classList.remove("text-red-500");
+                correctCount++;
+            } else {
+                feedbackContainer.textContent = `Incorrecto. La respuesta correcta era: ${questionData.options[questionData.answer]}`;
+                feedbackContainer.classList.add("text-red-500");
+                feedbackContainer.classList.remove("text-green-500");
+                incorrectCount++;
+            }
+
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(loadQuestion, 1000); // Esperar un segundo antes de cargar la siguiente pregunta
+            } else {
+                quizContainer.innerHTML = `
+                    <p class="text-lg font-medium">Has completado el quiz.</p>
+                    <p class="mt-2">Aciertos: ${correctCount}</p>
+                    <p>Fallos: ${incorrectCount}</p>
+                    <button class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none" onclick="restartQuiz()">Reiniciar</button>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+            feedbackContainer.textContent = "";
+            loadQuestion();
+        }
+
+        // Cargar las preguntas aleatorias
+        loadQuestion();
+    </script>
+</body>
+</html>
